@@ -105,68 +105,51 @@ public class MainGameLoop {
 				1,1,
 				1,0
 		};*/
-		
-		RawModel model = OBJLoader.loadObjModel("fern",loader);
-		TexturedModel staticModel= new TexturedModel(model, new ModelTexture(loader.loadTexture("flower")));
-		
+
 		RawModel model2 = OBJLoader.loadObjModel("tree",loader);
 		TexturedModel staticModel2= new TexturedModel(model2, new ModelTexture(loader.loadTexture("tree")));
-		
-		RawModel model3 = OBJLoader.loadObjModel("Snow covered CottageOBJ",loader);
-		TexturedModel staticModel3= new TexturedModel(model3, new ModelTexture(loader.loadTexture("Cottage Texture")));
-		
-		Entity entity= new Entity(staticModel, new Vector3f(0,0,-25),0,0,0,1);
+		staticModel2.getTexture().setHasTransparency(true);
+		//staticModel2.getTexture().setUseFakeLighting(true);
 		Entity entityTree= new Entity(staticModel2, new Vector3f(0,0,-25),0,0,0,1);
-		Entity entityStalls= new Entity(staticModel3, new Vector3f(0,0,-25),0,0,0,1);
-		
 		Light light= new Light(new Vector3f( 0, 0,-20), new Vector3f(1,1,1));
-		Terrain terrain = new Terrain(-1,0, loader, new ModelTexture(loader.loadTexture("grass")));
-		Terrain terrain2 = new Terrain(-1, 1, loader, new ModelTexture(loader.loadTexture("grass")));
+		Terrain terrain = new Terrain(-1,-1, loader, new ModelTexture(loader.loadTexture("grass")));
+		Terrain terrain2 = new Terrain(0, -1, loader, new ModelTexture(loader.loadTexture("grass")));
 		Camera  camera = new Camera();
-		ModelTexture texture= staticModel.getTexture();
+		ModelTexture texture= staticModel2.getTexture();
 		texture.setShineDamper(10);
 		texture.setReflectivity(1);
+		
 		MasterRenderer renderer = new MasterRenderer();
-		List<Entity> allFerns = new ArrayList<Entity>();
 		List<Entity> allTrees= new ArrayList<Entity>();
-		List<Entity> allGrass = new ArrayList<Entity>();
+
 		Random random = new Random();
 		
+	
 		for (int i = 0; i < 500; i++) {
-			float x= random.nextInt(750)*-1;
+			float x= random.nextInt(750);
 			float y=1;
-			float z= random.nextInt(1500);
-			allFerns.add(new Entity(staticModel, new Vector3f(x,y,z), 0, 0,0f,1f));
-			
-		}
-		for (int i = 0; i < 500; i++) {
-			float x= random.nextInt(750)*-1;
-			float y=1;
-			float z= random.nextInt(1500);
+			float z= random.nextInt(750)*-1;
 			allTrees.add(new Entity(staticModel2, new Vector3f(x,y,z), 0, 0,0f,10f));
 			
 		}
-		for (int i = 0; i < 5; i++) {
-			float x= (float) (random.nextInt(750)*-1);
+		for (int i = 0; i < 500; i++) {
+			float x= random.nextInt(750)*-1;
 			float y=1;
-			float z= random.nextInt(1500);
-			allGrass.add(new Entity(staticModel3, new Vector3f(x,y,z), 0, 0,0f,4f));
+			float z= random.nextInt(750)*-1;
+			allTrees.add(new Entity(staticModel2, new Vector3f(x,y,z), 0, 0,0f,10f));
 			
 		}
+
 		
 		while(!Display.isCloseRequested()){
 			//entity.increasePosition(0,0,0);
 			//entity.increaseRotation(0, 1, 0);
 			camera.move(); 
-			for (Entity entity2 : allFerns) {
-				renderer.prosessEntity(entity2);
-			}
+
 			for (Entity entity3 : allTrees) {
 				renderer.prosessEntity(entity3);
 			}
-			for (Entity entity4 : allGrass) {
-				renderer.prosessEntity(entity4);
-			}
+			
 			
 			renderer.processTerrain(terrain);
 			renderer.processTerrain(terrain2);
