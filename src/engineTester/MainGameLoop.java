@@ -112,8 +112,8 @@ public class MainGameLoop {
 		RawModel model2 = OBJLoader.loadObjModel("tree",loader);
 		TexturedModel staticModel2= new TexturedModel(model2, new ModelTexture(loader.loadTexture("tree")));
 		
-		RawModel model3 = OBJLoader.loadObjModel("grassModel",loader);
-		TexturedModel staticModel3= new TexturedModel(model3, new ModelTexture(loader.loadTexture("grassTexture")));
+		RawModel model3 = OBJLoader.loadObjModel("Snow covered CottageOBJ",loader);
+		TexturedModel staticModel3= new TexturedModel(model3, new ModelTexture(loader.loadTexture("Cottage Texture")));
 		
 		Entity entity= new Entity(staticModel, new Vector3f(0,0,-25),0,0,0,1);
 		Entity entityTree= new Entity(staticModel2, new Vector3f(0,0,-25),0,0,0,1);
@@ -146,7 +146,7 @@ public class MainGameLoop {
 			allTrees.add(new Entity(staticModel2, new Vector3f(x,y,z), 0, 0,0f,10f));
 			
 		}
-		for (int i = 0; i < 500; i++) {
+		for (int i = 0; i < 5; i++) {
 			float x= (float) (random.nextInt(750)*-1);
 			float y=1;
 			float z= random.nextInt(1500);
