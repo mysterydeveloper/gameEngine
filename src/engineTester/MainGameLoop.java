@@ -13,6 +13,7 @@ import org.lwjgl.util.vector.Vector3f;
 import entities.Camera;
 import entities.Entity;
 import entities.Light;
+import entities.Player;
 import renderEngine.DisplayManager;
 import renderEngine.Loader;
 import renderEngine.MasterRenderer;
@@ -21,6 +22,8 @@ import renderEngine.EntityRenderer;
 import shaders.StaticShader;
 import terrain.Terrain;
 import textures.ModelTexture;
+import textures.TerrainTexture;
+import textures.TerrainTexturePack;
 
 
 
@@ -31,90 +34,29 @@ public class MainGameLoop {
 		
 		Loader loader= new Loader();	
 		
-		//opengl expects vertices to be defined counter clockwise by default
-		/*float[] vertices = { 
-				-0.5f,0.5f,-0.5f,	
-				-0.5f,-0.5f,-0.5f,	
-				0.5f,-0.5f,-0.5f,	
-				0.5f,0.5f,-0.5f,		
-				
-				-0.5f,0.5f,0.5f,	
-				-0.5f,-0.5f,0.5f,	
-				0.5f,-0.5f,0.5f,	
-				0.5f,0.5f,0.5f,
-				
-				0.5f,0.5f,-0.5f,	
-				0.5f,-0.5f,-0.5f,	
-				0.5f,-0.5f,0.5f,	
-				0.5f,0.5f,0.5f,
-				
-				-0.5f,0.5f,-0.5f,	
-				-0.5f,-0.5f,-0.5f,	
-				-0.5f,-0.5f,0.5f,	
-				-0.5f,0.5f,0.5f,
-				
-				-0.5f,0.5f,0.5f,
-				-0.5f,0.5f,-0.5f,
-				0.5f,0.5f,-0.5f,
-				0.5f,0.5f,0.5f,
-				
-				-0.5f,-0.5f,0.5f,
-				-0.5f,-0.5f,-0.5f,
-				0.5f,-0.5f,-0.5f,
-				0.5f,-0.5f,0.5f
-		};
+		TerrainTexture backgroundTexture= new TerrainTexture(loader.loadTexture("grass"));
+		TerrainTexture rTexture= new TerrainTexture(loader.loadTexture("dirt"));
+		TerrainTexture gTexture= new TerrainTexture(loader.loadTexture("grassFlowers"));
+		TerrainTexture bTexture= new TerrainTexture(loader.loadTexture("path"));
 		
-		int[] indices={
-				0,1,3,	
-				3,1,2,	
-				4,5,7,
-				7,5,6,
-				8,9,11,
-				11,9,10,
-				12,13,15,
-				15,13,14,	
-				16,17,19,
-				19,17,18,
-				20,21,23,
-				23,21,22
-		};
+		TerrainTexturePack texturePack = new TerrainTexturePack(backgroundTexture, rTexture, gTexture, bTexture);
+		TerrainTexture blendMap= new TerrainTexture(loader.loadTexture("blendMap"));
 		
-		float[] textureCoords ={
-				0,0,
-				0,1,
-				1,1,
-				1,0,			
-				0,0,
-				0,1,
-				1,1,
-				1,0,			
-				0,0,
-				0,1,
-				1,1,
-				1,0,
-				0,0,
-				0,1,
-				1,1,
-				1,0,
-				0,0,
-				0,1,
-				1,1,
-				1,0,
-				0,0,
-				0,1,
-				1,1,
-				1,0
-		};*/
-
-		RawModel model2 = OBJLoader.loadObjModel("tree",loader);
+		RawModel model2 = OBJLoader.loadObjModel("untitled",loader);
 		TexturedModel staticModel2= new TexturedModel(model2, new ModelTexture(loader.loadTexture("tree")));
 		staticModel2.getTexture().setHasTransparency(true);
 		//staticModel2.getTexture().setUseFakeLighting(true);
-		Entity entityTree= new Entity(staticModel2, new Vector3f(0,0,-25),0,0,0,1);
-		Light light= new Light(new Vector3f( 0, 0,-20), new Vector3f(1,1,1));
-		Terrain terrain = new Terrain(-1,-1, loader, new ModelTexture(loader.loadTexture("grass")));
-		Terrain terrain2 = new Terrain(0, -1, loader, new ModelTexture(loader.loadTexture("grass")));
+		//RawModel model3 = OBJLoader.loadObjModel("bunny",loader);
+		//TexturedModel staticModel3= new TexturedModel(model3, new ModelTexture(loader.loadTexture("white")));
+		
+		
+		Light light= new Light(new Vector3f( 0, 30,0), new Vector3f(1,1,1));
+		
+		Terrain terrain = new Terrain(0,-1, loader, texturePack, blendMap);
+		Terrain terrain2 = new Terrain(-1, -1, loader, texturePack ,blendMap);
+		
 		Camera  camera = new Camera();
+		
 		ModelTexture texture= staticModel2.getTexture();
 		texture.setShineDamper(10);
 		texture.setReflectivity(1);
@@ -123,20 +65,19 @@ public class MainGameLoop {
 		List<Entity> allTrees= new ArrayList<Entity>();
 
 		Random random = new Random();
-		
+		Player player= new Player(staticModel2, new Vector3f(0,0,-40), 0, 0, 0, 10);
 	
 		for (int i = 0; i < 500; i++) {
 			float x= random.nextInt(750);
 			float y=1;
 			float z= random.nextInt(750)*-1;
-			allTrees.add(new Entity(staticModel2, new Vector3f(x,y,z), 0, 0,0f,10f));
-			
+			allTrees.add(new Entity(staticModel2, new Vector3f(x,y,z), 0, 0,0f,5f));
 		}
 		for (int i = 0; i < 500; i++) {
 			float x= random.nextInt(750)*-1;
-			float y=1;
+			float y=0;
 			float z= random.nextInt(750)*-1;
-			allTrees.add(new Entity(staticModel2, new Vector3f(x,y,z), 0, 0,0f,10f));
+			allTrees.add(new Entity(staticModel2, new Vector3f(x,y,z), 0, 0,0f,5f));
 			
 		}
 
@@ -145,11 +86,8 @@ public class MainGameLoop {
 			//entity.increasePosition(0,0,0);
 			//entity.increaseRotation(0, 1, 0);
 			camera.move(); 
-
-			for (Entity entity3 : allTrees) {
-				renderer.prosessEntity(entity3);
-			}
-			
+			player.move();
+			renderer.prosessEntity(player);
 			
 			renderer.processTerrain(terrain);
 			renderer.processTerrain(terrain2);

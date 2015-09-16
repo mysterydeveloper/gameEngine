@@ -1,9 +1,11 @@
 package renderEngine;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -18,6 +20,7 @@ public class OBJLoader {
 	public static RawModel loadObjModel(String fileName,Loader Loader){
 		FileReader fr= null;
 		try {
+			orderObjFile(fileName);
 			fr = new FileReader( new File("res/"+fileName+".obj"));
 		} catch (FileNotFoundException e) {
 			System.err.println("couldnt find file");
@@ -103,5 +106,64 @@ public class OBJLoader {
 			
 			
 		}
+	private static void orderObjFile(String fileName){
+		FileReader fr= null;
+		try {
+			fr = new FileReader( new File("res/"+fileName+".obj"));
+			
+		} catch (FileNotFoundException e) {
+			System.err.println("couldnt find file");
+			e.printStackTrace();
+		}
+		
+		BufferedReader reader = new BufferedReader(fr);
+		String line = " ";
+		List<String> vertices = new ArrayList<String>();
+		List<String> textures = new ArrayList<String>();
+		List<String> normals = new ArrayList<String>();
+		List<String> faces = new ArrayList<String>();
+		List<String> nos = new ArrayList<String>();
+		
+		try {
+			line=reader.readLine();
+		while(!line.startsWith("x")){
+			
+			
+			
+			if(line.startsWith("v ")){
+				vertices.add(line.toString());
+			}else if(line.startsWith("vt ")){
+				textures.add(line.toString());
+			}else if(line.startsWith("vn ")){
+				normals.add(line.toString());
+			}else if(line.startsWith("f ")){	
+				faces.add(line.toString());
+			}
+			line=reader.readLine();
+		}
+		fr.close();
+		
+		 BufferedWriter bwr = new BufferedWriter(new FileWriter(new File("res/"+fileName+".obj")));
+		 StringBuilder builder= new StringBuilder();
+         for (String vertice : vertices) {
+        	 bwr.append(vertice+"\n");
+ 		 }
+         for (String texture : textures) {
+        	 bwr.append(texture+"\n");
+ 		 }
+         for (String normal : normals) {
+        	 bwr.append(normal+"\n");
+ 		 }
+     	for (String face : faces) {
+     		bwr.append(face+"\n");
+		 }
+     	bwr.append("x");
+     	bwr.close();
+		reader.close();
+	}catch (IOException e) {
+		e.printStackTrace();
+		
+	}
+	}
 	
 }
