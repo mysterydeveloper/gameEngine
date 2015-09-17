@@ -20,7 +20,7 @@ public class OBJLoader {
 	public static RawModel loadObjModel(String fileName,Loader Loader){
 		FileReader fr= null;
 		try {
-			orderObjFile(fileName);
+			//orderObjFile(fileName);
 			fr = new FileReader( new File("res/"+fileName+".obj"));
 		} catch (FileNotFoundException e) {
 			System.err.println("couldnt find file");

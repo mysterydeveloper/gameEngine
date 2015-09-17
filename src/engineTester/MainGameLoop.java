@@ -1,6 +1,7 @@
 package engineTester;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
 
@@ -42,12 +43,12 @@ public class MainGameLoop {
 		TerrainTexturePack texturePack = new TerrainTexturePack(backgroundTexture, rTexture, gTexture, bTexture);
 		TerrainTexture blendMap= new TerrainTexture(loader.loadTexture("blendMap"));
 		
-		RawModel model2 = OBJLoader.loadObjModel("untitled",loader);
+		RawModel model2 = OBJLoader.loadObjModel("tree",loader);
 		TexturedModel staticModel2= new TexturedModel(model2, new ModelTexture(loader.loadTexture("tree")));
 		staticModel2.getTexture().setHasTransparency(true);
 		//staticModel2.getTexture().setUseFakeLighting(true);
-		//RawModel model3 = OBJLoader.loadObjModel("bunny",loader);
-		//TexturedModel staticModel3= new TexturedModel(model3, new ModelTexture(loader.loadTexture("white")));
+		RawModel model3 = OBJLoader.loadObjModel("bunny",loader);
+		TexturedModel staticModel3= new TexturedModel(model3, new ModelTexture(loader.loadTexture("white")));
 		
 		
 		Light light= new Light(new Vector3f( 0, 30,0), new Vector3f(1,1,1));
@@ -55,7 +56,7 @@ public class MainGameLoop {
 		Terrain terrain = new Terrain(0,-1, loader, texturePack, blendMap);
 		Terrain terrain2 = new Terrain(-1, -1, loader, texturePack ,blendMap);
 		
-		Camera  camera = new Camera();
+		
 		
 		ModelTexture texture= staticModel2.getTexture();
 		texture.setShineDamper(10);
@@ -65,7 +66,12 @@ public class MainGameLoop {
 		List<Entity> allTrees= new ArrayList<Entity>();
 
 		Random random = new Random();
-		Player player= new Player(staticModel2, new Vector3f(0,0,-40), 0, 0, 0, 10);
+		Player player= new Player(staticModel3, new Vector3f(0,0,-40), 0, 0, 0, 1);
+		Camera  camera = new Camera(player);
+		
+		RawModel model4 = OBJLoader.loadObjModel("tree",loader);
+		TexturedModel staticModel4= new TexturedModel(model4, new ModelTexture(loader.loadTexture("tree")));
+		Entity entity = new Entity(staticModel4, new Vector3f(20, 0, -40), 0, 0, 0, 10);
 	
 		for (int i = 0; i < 500; i++) {
 			float x= random.nextInt(750);
@@ -78,8 +84,8 @@ public class MainGameLoop {
 			float y=0;
 			float z= random.nextInt(750)*-1;
 			allTrees.add(new Entity(staticModel2, new Vector3f(x,y,z), 0, 0,0f,5f));
-			
 		}
+		
 
 		
 		while(!Display.isCloseRequested()){
@@ -88,7 +94,10 @@ public class MainGameLoop {
 			camera.move(); 
 			player.move();
 			renderer.prosessEntity(player);
-			
+			for (Entity entity2 : allTrees) {
+				renderer.prosessEntity(entity2);
+			}
+			renderer.prosessEntity(entity);
 			renderer.processTerrain(terrain);
 			renderer.processTerrain(terrain2);
 			renderer.render(light, camera);
