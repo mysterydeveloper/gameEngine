@@ -43,18 +43,20 @@ public class MainGameLoop {
 		TerrainTexturePack texturePack = new TerrainTexturePack(backgroundTexture, rTexture, gTexture, bTexture);
 		TerrainTexture blendMap= new TerrainTexture(loader.loadTexture("blendMap"));
 		
-		RawModel model2 = OBJLoader.loadObjModel("tree",loader);
-		TexturedModel staticModel2= new TexturedModel(model2, new ModelTexture(loader.loadTexture("tree")));
-		staticModel2.getTexture().setHasTransparency(true);
+		RawModel model2 = OBJLoader.loadObjModel("lowPolyTree",loader);
+		TexturedModel staticModel2= new TexturedModel(model2, new ModelTexture(loader.loadTexture("lowPolyTree")));
+		RawModel model4 = OBJLoader.loadObjModel("tree",loader);
+		TexturedModel staticModel4= new TexturedModel(model4, new ModelTexture(loader.loadTexture("tree")));
+		
+		//staticModel2.getTexture().setHasTransparency(true);
 		//staticModel2.getTexture().setUseFakeLighting(true);
-		RawModel model3 = OBJLoader.loadObjModel("bunny",loader);
-		TexturedModel staticModel3= new TexturedModel(model3, new ModelTexture(loader.loadTexture("white")));
+		RawModel model3 = OBJLoader.loadObjModel("person",loader);
+		TexturedModel staticModel3= new TexturedModel(model3, new ModelTexture(loader.loadTexture("playerTexture")));
 		
 		
 		Light light= new Light(new Vector3f( 0, 30,0), new Vector3f(1,1,1));
 		
-		Terrain terrain = new Terrain(0,-1, loader, texturePack, blendMap);
-		Terrain terrain2 = new Terrain(-1, -1, loader, texturePack ,blendMap);
+		Terrain terrain = new Terrain(0,-1, loader, texturePack, blendMap,"heightmap");
 		
 		
 		
@@ -69,37 +71,34 @@ public class MainGameLoop {
 		Player player= new Player(staticModel3, new Vector3f(0,0,-40), 0, 0, 0, 1);
 		Camera  camera = new Camera(player);
 		
-		RawModel model4 = OBJLoader.loadObjModel("tree",loader);
-		TexturedModel staticModel4= new TexturedModel(model4, new ModelTexture(loader.loadTexture("tree")));
-		Entity entity = new Entity(staticModel4, new Vector3f(20, 0, -40), 0, 0, 0, 10);
-	
-		for (int i = 0; i < 500; i++) {
-			float x= random.nextInt(750);
-			float y=1;
-			float z= random.nextInt(750)*-1;
-			allTrees.add(new Entity(staticModel2, new Vector3f(x,y,z), 0, 0,0f,5f));
-		}
-		for (int i = 0; i < 500; i++) {
-			float x= random.nextInt(750)*-1;
-			float y=0;
-			float z= random.nextInt(750)*-1;
-			allTrees.add(new Entity(staticModel2, new Vector3f(x,y,z), 0, 0,0f,5f));
-		}
 		
+		for (int i = 0; i < 100; i++) {
+			if(i%20==0){
+				float x= random.nextInt(750);
+				float z= random.nextInt(750)*-1;
+				float y=terrain.getHeightOfTerrain(x, z);;
+				allTrees.add(new Entity(staticModel2, new Vector3f(x,y,z), 0, 0,0f,0.5f));
+			}else {
+				float x= random.nextInt(750);
+				float z= random.nextInt(750)*-1;
+				float y=terrain.getHeightOfTerrain(x, z);;
+				allTrees.add(new Entity(staticModel4, new Vector3f(x,y,z), 0, 0,0f,5f));
+			}
+		}
+
 
 		
 		while(!Display.isCloseRequested()){
 			//entity.increasePosition(0,0,0);
 			//entity.increaseRotation(0, 1, 0);
 			camera.move(); 
-			player.move();
+			player.move(terrain);
 			renderer.prosessEntity(player);
 			for (Entity entity2 : allTrees) {
 				renderer.prosessEntity(entity2);
 			}
-			renderer.prosessEntity(entity);
 			renderer.processTerrain(terrain);
-			renderer.processTerrain(terrain2);
+
 			renderer.render(light, camera);
 			DisplayManager.updateDisplay();
 			
