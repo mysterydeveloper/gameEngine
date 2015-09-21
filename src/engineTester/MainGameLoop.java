@@ -37,8 +37,7 @@ import textures.TerrainTexturePack;
 
 public class MainGameLoop {
 
-	private static  int i =0;
-	
+
 	public static void main(String[] args) {
 		DisplayManager.createDisplay();
 		
@@ -150,8 +149,6 @@ public class MainGameLoop {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			
-		
 		}
 		guiRenderer.cleanUp();
 		renderer.cleanUp();
