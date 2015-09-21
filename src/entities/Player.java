@@ -10,7 +10,7 @@ import terrain.Terrain;
 
 public class Player extends Entity {
 
-	private static final float RUN_SPEED=20;
+	private static final float RUN_SPEED=40;
 	private static final float TURN_SPEED=160;
 	private static final float GRAVITY=-50;
 	private static final float JUMP_POWER=30;
@@ -22,8 +22,6 @@ public class Player extends Entity {
 	private float upwardSpeed=0;
 	
 	private boolean isInAir =false;
-	
-	
 	
 	public Player(TexturedModel model, Vector3f position, float rotX,
 			float rotY, float rotZ, float scale) {

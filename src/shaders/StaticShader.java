@@ -2,6 +2,7 @@ package shaders;
 
 import org.lwjgl.util.vector.Matrix;
 import org.lwjgl.util.vector.Matrix4f;
+import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
 
 import toolBox.Maths;
@@ -22,6 +23,8 @@ public class StaticShader extends ShaderProgram {
 	private int location_reflectivity;
 	private int location_useFakeLighting;
 	private int location_skyColor;
+	private int location_numberOfRows;
+	private int location_offset;
 	
 
 	
@@ -49,9 +52,17 @@ public class StaticShader extends ShaderProgram {
 		location_reflectivity=super.getUinformLocation("reflectivity");
 		location_useFakeLighting=super.getUinformLocation("useFakeLighting");
 		location_skyColor=super.getUinformLocation("skyColour");
+		location_numberOfRows=super.getUinformLocation("numberOfRows");
+		location_offset=super.getUinformLocation("offset");
 		
 	}
 	
+	public void loadNumberOfRows(int numberOfRows){
+		super.loadFloat(location_numberOfRows, numberOfRows);
+	}
+	public void loadOffset(float x,float y){
+	super.load2DVector(location_offset, new Vector2f(x,y));
+	}	
 	public void loadSkyColor(float r, float g, float b){
 		super.loadVector(location_skyColor, new Vector3f(r, g, b));
 	}

@@ -31,11 +31,11 @@ public class Terrain {
 	private float [][] heights;
 
 	
-	public  Terrain(int gridX ,int gridZ, Loader loader, TerrainTexturePack texturePack,TerrainTexture blendMap,String heightMap){
+	public  Terrain(float gridX ,float d, Loader loader, TerrainTexturePack texturePack,TerrainTexture blendMap,String heightMap){
 		this.texturePack = texturePack;
 		this.blendMap=blendMap;
 		this.x = gridX*SIZE;
-		this.z = gridZ*SIZE;
+		this.z = d*SIZE;
 		this.model= generateTerrain(loader,heightMap);
 	}
 

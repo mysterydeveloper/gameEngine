@@ -20,7 +20,7 @@ public class OBJLoader {
 	public static RawModel loadObjModel(String fileName,Loader Loader){
 		FileReader fr= null;
 		try {
-			//orderObjFile(fileName);
+			orderObjFile(fileName);
 			fr = new FileReader( new File("res/"+fileName+".obj"));
 		} catch (FileNotFoundException e) {
 			System.err.println("couldnt find file");
@@ -126,10 +126,7 @@ public class OBJLoader {
 		
 		try {
 			line=reader.readLine();
-		while(!line.startsWith("x")){
-			
-			
-			
+		while(!line.startsWith("x")){	
 			if(line.startsWith("v ")){
 				vertices.add(line.toString());
 			}else if(line.startsWith("vt ")){
@@ -142,7 +139,6 @@ public class OBJLoader {
 			line=reader.readLine();
 		}
 		fr.close();
-		
 		 BufferedWriter bwr = new BufferedWriter(new FileWriter(new File("res/"+fileName+".obj")));
 		 StringBuilder builder= new StringBuilder();
          for (String vertice : vertices) {
