@@ -43,53 +43,35 @@ public class MainGameLoop {
 		
 		Loader loader= new Loader();	
 		
-		TerrainTexture backgroundTexture= new TerrainTexture(loader.loadTexture("grass"));
-		TerrainTexture rTexture= new TerrainTexture(loader.loadTexture("path"));
-		TerrainTexture gTexture= new TerrainTexture(loader.loadTexture("white"));
+		TerrainTexture backgroundTexture= new TerrainTexture(loader.loadTexture("blue"));
+		TerrainTexture rTexture= new TerrainTexture(loader.loadTexture("road"));
+		TerrainTexture gTexture= new TerrainTexture(loader.loadTexture("road"));
 		TerrainTexture bTexture= new TerrainTexture(loader.loadTexture("road"));
 		
 		TerrainTexturePack texturePack = new TerrainTexturePack(backgroundTexture, rTexture, gTexture, bTexture);
 		TerrainTexture blendMap= new TerrainTexture(loader.loadTexture("blendMap2"));
 		
-		RawModel model2 = OBJLoader.loadObjModel("lowPolyTree",loader);
-		TexturedModel staticModel2= new TexturedModel(model2, new ModelTexture(loader.loadTexture("lowPolyTree")));
+
 		ModelTexture fernTextureAtlas = new ModelTexture(loader.loadTexture("fern"));
 		fernTextureAtlas.setNumberOfRows(2);
 		TexturedModel staticModel5= new TexturedModel(OBJLoader.loadObjModel("fern", loader),fernTextureAtlas);
-		
+		Entity fern= new Entity(staticModel5, new Vector3f(0,0,-40), 0, 0, 0, 1);
 		//staticModel2.getTexture().setHasTransparency(true);
 		//staticModel2.getTexture().setUseFakeLighting(true);
-		RawModel model3 = OBJLoader.loadObjModel("person",loader);
-		TexturedModel staticModel3= new TexturedModel(model3, new ModelTexture(loader.loadTexture("playerTexture")));
-		
+		RawModel model3 = OBJLoader.loadObjModel("knight",loader);
+		TexturedModel staticModel3= new TexturedModel(model3, new ModelTexture(loader.loadTexture("white")));
 		
 		Light light= new Light(new Vector3f( 0, 30,0), new Vector3f(1,1,1));
 		
 		Terrain terrain = new Terrain(-0.5f,-0.5f, loader, texturePack, blendMap,"heightmap2");
-		List<Entity> entities= new ArrayList<Entity>();
-		boolean guit=false;
-		int o=0;
-		
-		Random random= new Random();
-		for (int j = 0; j < 400; j++) {
-			if(o%2==0){
-				float x = (float) (random.nextInt(700)*-1);
-				float z = (float) (random.nextInt(700));
-				float y = terrain.getHeightOfTerrain(x, z);
-				
-				entities.add(new Entity(staticModel2,random.nextInt(4), new Vector3f(x,y,z),0,random.nextFloat(),0,0.9f));
-			}
-			
-		}
-		
-		
-		ModelTexture texture= staticModel2.getTexture();
-		texture.setShineDamper(10);
-		texture.setReflectivity(1);
+	
+		//ModelTexture texture= staticModel2.getTexture();
+		//texture.setShineDamper(10);
+		//texture.setReflectivity(1);
 		
 		MasterRenderer renderer = new MasterRenderer(loader);
 
-		Player player= new Player(staticModel3, new Vector3f(0,0,-40), 0, 0, 0, 1);
+		Player player= new Player(staticModel3, new Vector3f(0,0,-40), 0, 0, 0, 0.01f);
 		Camera  camera = new Camera(player);
 		GuiTexture guibag= new GuiTexture(loader.loadTexture("loot bag"), new Vector2f(0.65f,-0.3f), new Vector2f(0.35f,0.54f));
 		GuiTexture guiskills= new GuiTexture(loader.loadTexture("skills"), new Vector2f(0.65f,-0.3f), new Vector2f(0.35f,0.54f));
@@ -107,9 +89,7 @@ public class MainGameLoop {
 			player.move(terrain);
 			renderer.prosessEntity(player);
 			renderer.processTerrain(terrain);
-			for (Entity entity : entities) {
-				renderer.prosessEntity(entity);
-			}
+
 			renderer.render(light, camera);
 			 if(Keyboard.isKeyDown(Keyboard.KEY_Z)){
 				 skills=true;
@@ -140,15 +120,8 @@ public class MainGameLoop {
 				guiRenderer.render(guisarmour);
 			}
 			guiRenderer.render(guisBar);
-
+			renderer.prosessEntity(fern);
 			DisplayManager.updateDisplay();
-			
-			try {
-				TimeUnit.MILLISECONDS.sleep(100);
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
 		}
 		guiRenderer.cleanUp();
 		renderer.cleanUp();
